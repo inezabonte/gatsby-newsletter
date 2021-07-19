@@ -12,7 +12,6 @@ const IndexPage = () => {
 
 	const handleInputfieldChange = (event) => {
 		setValue(event.target.value);
-		console.log(value);
 	};
 
 	const handleFormSubmit = async (event) => {
