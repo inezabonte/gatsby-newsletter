@@ -14,17 +14,17 @@ export default async function newsletterFormHandler(req, res) {
 		const existingUsers = await notion.databases.query({
 			database_id: databaseId,
 		});
-		const findUser = existingUsers.results.find(
+		const foundUser = existingUsers.results.find(
 			(user) => user.properties.Email.email === email
 		);
 
-		if (findUser) {
+		if (foundUser) {
 			return res.status(409).json({
 				status: 409,
 				message: "Email already registered",
 			});
 		}
-		const addEmail = await notion.pages.create({
+		await notion.pages.create({
 			parent: {
 				database_id: process.env.NOTION_API_DATABASE,
 			},

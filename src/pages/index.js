@@ -1,36 +1,35 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-// markup
 const IndexPage = () => {
 	const [value, setValue] = useState("");
-	const [loading, setLoading] = useState(false);
-	const [status, setStatus] = useState({
-		message: "",
-	});
-
+	const [status, setStatus] = useState("initial");
+	const [message, setMessage] = useState("");
+	const [color, setColor] = useState("#0373d6");
 	const handleInputfieldChange = (event) => {
 		setValue(event.target.value);
 	};
 
 	const handleFormSubmit = async (event) => {
 		event.preventDefault();
-		setLoading(true);
-		setStatus({ message: "Hold on" });
+		setStatus("pending");
+		setColor("#0373d6");
+		setMessage("Hold on ...");
 		try {
 			const response = await axios.post("/api/newsletter-form", {
 				email: value,
 			});
-			setLoading(false);
-			setStatus({ message: response.data.message });
-			setValue("");
+			setStatus("success");
+			setColor("#00ad00");
+			setMessage(response.data.message);
 		} catch (error) {
-			setLoading(false);
-			setStatus({
-				message: error.response.data.message,
-			});
+			setColor("#ff3434");
+			setStatus("failed");
+			setMessage(error.response.data.message);
 		}
 	};
+
+	const isLoading = status === "pending";
 
 	return (
 		<main className="w-full h-screen flex justify-center items-center bg-blue-400">
@@ -53,14 +52,14 @@ const IndexPage = () => {
 						placeholder="Your email address"
 						className="border-2 border-gray-500 w-full  p-2 rounded mb-2"
 						onChange={handleInputfieldChange}
-						disabled={loading}
+						disabled={isLoading}
 					/>
-					<div className={`mb-4 text-sm font-medium`}>
-						<p>{status.message}</p>
+					<div className="mb-4 text-sm font-medium" style={{ color: color }}>
+						<p>{message}</p>
 					</div>
 					<button
 						type="submit"
-						disabled={loading}
+						disabled={isLoading}
 						className="w-full bg-black p-2 text-white font-bold rounded"
 					>
 						Sign Up
