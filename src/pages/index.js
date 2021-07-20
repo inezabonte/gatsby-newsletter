@@ -7,7 +7,6 @@ const IndexPage = () => {
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState({
 		message: "",
-		color: "",
 	});
 
 	const handleInputfieldChange = (event) => {
@@ -17,19 +16,18 @@ const IndexPage = () => {
 	const handleFormSubmit = async (event) => {
 		event.preventDefault();
 		setLoading(true);
-		setStatus({ message: "Hold on", color: "blue" });
+		setStatus({ message: "Hold on" });
 		try {
 			const response = await axios.post("/api/newsletter-form", {
 				email: value,
 			});
 			setLoading(false);
-			setStatus({ message: response.data.message, color: response.data.color });
+			setStatus({ message: response.data.message });
 			setValue("");
 		} catch (error) {
 			setLoading(false);
 			setStatus({
 				message: error.response.data.message,
-				color: error.response.data.color,
 			});
 		}
 	};
@@ -57,7 +55,7 @@ const IndexPage = () => {
 						onChange={handleInputfieldChange}
 						disabled={loading}
 					/>
-					<div className={`mb-4 text-sm font-medium text-${status.color}-500`}>
+					<div className={`mb-4 text-sm font-medium`}>
 						<p>{status.message}</p>
 					</div>
 					<button
